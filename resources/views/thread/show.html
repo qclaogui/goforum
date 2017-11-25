@@ -1,0 +1,56 @@
+{{define "thread/show.html"}}
+{{template "layouts/header.html" .}}
+{{template "layouts/nav.html" .}}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="level">
+                        <span class="flex">{{ .thread.Title }}</span>
+                    {{/*@can('update',$thread)*/}}
+                        <form action="{{.host}}/t/delete/{{.thread.ID}}" method="post">
+                            <button class="btn btn-danger">DELETE</button>
+                        </form>
+                    {{/*@endcan*/}}
+                    </div>
+                </div>
+
+                <div class="panel-body">{{ .thread.Body }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            {{ range .replies }}
+                {{ template "thread/reply.html" .}}
+            {{ end }}
+        </div>
+    </div>
+
+
+    {{/*@if(auth()->check())*/}}
+{{/*<div class="row">*/}}
+{{/*<div class="col-md-8 col-md-offset-2">*/}}
+
+        {{/*<form method="POST" action="{{ $thread->path().'/replies' }}">*/}}
+
+    {{/*<div class="form-group">*/}}
+        {{/*<textarea name="body" rows="5" id="body" CLASS="form-control" PLACEHOLDER="Have something to say?"></textarea>*/}}
+    {{/*</div>*/}}
+
+    {{/*<button type="submit" class="btn btn-default">Post</button>*/}}
+
+{{/*</form>*/}}
+
+{{/*</div>*/}}
+{{/*</div>*/}}
+
+    {{/*@else*/}}
+{{/*<p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to participate in this discussion.</p>*/}}
+    {{/*@endif*/}}
+
+</div>
+{{template "layouts/footer.html" .}}
+{{ end }}
