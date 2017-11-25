@@ -1,0 +1,16 @@
+{{define "thread/reply.html"}}
+            <div id="reply-{{.ID}}" class="panel panel-default">
+
+                <div class="panel-heading">
+                    <div class="level">
+                        <h4 class="flex">
+                            <a href="{{ .UserId }}/{{.ID}}">Say At:{{ .CreatedAt.Format "2006-01-02 15:04:05" }}</a>
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                {{ .Body }}
+                </div>
+            </div>
+{{ end }}

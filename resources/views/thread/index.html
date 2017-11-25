@@ -1,0 +1,30 @@
+{{define "thread/index.html"}}
+{{template "layouts/header.html" .}}
+{{template "layouts/nav.html" .}}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+
+        {{range .threads}}
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+                    <div class="level">
+                        <h4 class="flex">
+                            <a href="{{ .ThreadPath }}/{{.ID}}">{{ .Title }}</a>
+                        </h4>
+                        <a href="/">7</a>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                {{ .Body }}
+                </div>
+
+            </div>
+        {{end}}
+        </div>
+    </div>
+</div>
+{{template "layouts/footer.html" .}}
+{{ end }}
