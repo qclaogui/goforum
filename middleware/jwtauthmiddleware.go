@@ -44,7 +44,10 @@ func JwtAuthMiddleware(except ...gin.HandlerFunc) gin.HandlerFunc {
 		//根据请求头来判断返回的数据格式
 		if "application/json" != c.GetHeader("Content-Type") {
 
-			token, _ := sessions.Default(c).Get("jwt-token").(string)
+			session := sessions.Default(c)
+			token, _ := session.Get("jwt-token").(string)
+			session.Save()
+
 			data, err = ValidateAuthToken(token)
 
 			//是否需要验证这个handles

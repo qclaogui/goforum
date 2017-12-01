@@ -1,6 +1,7 @@
 {{define "thread/index.html"}}
 {{template "layouts/header.html" .}}
 {{template "layouts/nav.html" .}}
+{{$host := .host}}
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -11,6 +12,8 @@
                 <div class="panel-heading">
                     <div class="level">
                         <h4 class="flex">
+                            <a href="{{$host}}/profiles/{{.User.Name}}">{{.User.Name}}</a>
+
                             <a href="{{ .ThreadPath }}/{{.ID}}">{{ .Title }}</a>
                         </h4>
                         <a href="/">7</a>

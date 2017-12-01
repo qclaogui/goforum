@@ -17,10 +17,17 @@ import (
 
 //get All Threads
 func ThreadControllerActionIndex(c *gin.Context) {
+
 	db := forumDB(c)
+
 	var threads []Thread
 
-	db.Find(&threads)
+	db.Debug().Find(&threads)
+
+	for i, v := range threads {
+		v.WithUser(db)
+		threads[i] = v
+	}
 
 	if "application/json" == c.ContentType() {
 		c.JSON(http.StatusOK, gin.H{
@@ -47,7 +54,7 @@ func ThreadControllerActionShow(c *gin.Context) {
 		return
 	}
 
-	thread, err := (&Thread{}).FindById(c, forumDB(c))
+	thread, err := (&Thread{}).FindById(c, forumDB(c), "User", "Reply")
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -69,7 +76,6 @@ func ThreadControllerActionShow(c *gin.Context) {
 		"js":      "http://" + c.Request.Host + "/assets/js/app.js",
 		"isLogin": authCheck(c),
 		"thread":  thread,
-		"replies": thread.Replies(forumDB(c)),
 	})
 }
 

@@ -143,7 +143,7 @@ func AuthControllerActionShowRegisterPage(c *gin.Context) {
 		"host":    "http://" + c.Request.Host,
 		"css":     "http://" + c.Request.Host + "/assets/css/app.css",
 		"js":      "http://" + c.Request.Host + "/assets/js/app.js",
-		"isLogin": isLogin,
+		"isLogin": authCheck(c),
 		"data":    c.Request.Proto,
 	})
 }
@@ -162,7 +162,7 @@ func AuthControllerActionShowLoginPage(c *gin.Context) {
 		"css":     "http://" + c.Request.Host + "/assets/css/app.css",
 		"js":      "http://" + c.Request.Host + "/assets/js/app.js",
 		"content": "Login",
-		"isLogin": isLogin,
+		"isLogin": authCheck(c),
 		"checked": "checked",
 	})
 }
