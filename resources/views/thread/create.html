@@ -8,7 +8,7 @@
     <div class="panel-heading">Create a New Thread</div>
 <div class="panel-body">
 <form action="/t/store" method="POST">
-    <input type="hidden" name="_method" value="PUT">
+{{.ginContext|csrf_field}}
 {{/*<div class="form-group">*/}}
     {{/*<label for="channel_id">Choose a Channel:</label>*/}}
 {{/*<select name = "channel_id" class="form-control" id="channel_id" placeholder="">*/}}

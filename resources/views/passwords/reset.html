@@ -13,6 +13,7 @@
                 {{/*<div class="alert alert-success">{{ session('status') }}</div>*/}}
                 {{/*@endif*/}}
                     <form class="form-horizontal" role="form" method="POST" action="{{ .host }}/password/reset">
+                    {{.ginContext|csrf_field}}
                         <input type="hidden" name="token" value="{{ .token }}">
                         <div class="form-group">
                             <label for="email" class="col-md-4 control-label">E-Mail Address</label>

@@ -48,6 +48,7 @@
                                 Logout
                             </a>
                             <form id="logout-form" action="/logout" method="POST" style="display: none;">
+                            {{.ginContext|csrf_field}}
                             </form>
                         </li>
                     </ul>

@@ -8,6 +8,7 @@
     <div class="panel-heading">Edit Thread</div>
 <div class="panel-body">
 <form action="/t/edit/{{.thread.ID}}" method="POST">
+{{.ginContext|csrf_field}}
 {{/*<div class="form-group">*/}}
     {{/*<label for="channel_id">Choose a Channel:</label>*/}}
 {{/*<select name = "channel_id" class="form-control" id="channel_id" placeholder="">*/}}

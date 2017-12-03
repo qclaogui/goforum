@@ -19,10 +19,11 @@ import (
 func ForgotPwdControllerActionShowRequestPage(c *gin.Context) {
 	//showLinkRequestForm
 	c.HTML(http.StatusOK, "passwords/email.html", gin.H{
-		"host":    "http://" + c.Request.Host,
-		"css":     "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":      "http://" + c.Request.Host + "/assets/js/app.js",
-		"content": "RequestForm",
+		"host":       "http://" + c.Request.Host,
+		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
+		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
+		"content":    "RequestForm",
+		"ginContext": c,
 	})
 }
 
@@ -41,11 +42,12 @@ func ForgotPwdControllerActionShowResetPage(c *gin.Context) {
 		token = "default token"
 	}
 	c.HTML(http.StatusOK, "passwords/reset.html", gin.H{
-		"host":    "http://" + c.Request.Host,
-		"css":     "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":      "http://" + c.Request.Host + "/assets/js/app.js",
-		"token":   token,
-		"content": "ResetForm",
+		"host":       "http://" + c.Request.Host,
+		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
+		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
+		"token":      token,
+		"content":    "ResetForm",
+		"ginContext": c,
 	})
 }
 

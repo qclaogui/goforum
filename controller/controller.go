@@ -44,25 +44,3 @@ func AuthUser(c *gin.Context) (*Payload, bool) {
  *
  * @return bool
  */
-func authCheck(c *gin.Context) bool {
-
-	if _, ok := AuthUser(c); ok {
-		return true
-	}
-
-	return false
-}
-
-/**
- * Determine if the current user is a guest.
- *
- * @return bool
- */
-func authGuest(c *gin.Context) bool {
-
-	if _, ok := AuthUser(c); ok {
-		return false
-	}
-
-	return true
-}

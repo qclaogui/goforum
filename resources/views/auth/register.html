@@ -12,7 +12,8 @@
     </div>
 <div class="panel-body">
 <form class="form-horizontal" role="form" method="POST" action="{{ .host }}/register">
-        <div class="form-group">
+{{.ginContext|csrf_field}}
+    <div class="form-group">
     <label for="name" class="col-md-4 control-label">Name</label>
 
 <div class="col-md-6">

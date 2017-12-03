@@ -20,7 +20,7 @@ import (
 	. "github.com/qclaogui/goforum/model"
 )
 
-var ShouldCheckHandles = make(map[string]bool, 50)
+var ExceptHandles = make(map[string]bool, 50)
 
 /**
  * jwt token 验证
@@ -29,16 +29,10 @@ var ShouldCheckHandles = make(map[string]bool, 50)
  */
 func JwtAuthMiddleware(except ...gin.HandlerFunc) gin.HandlerFunc {
 	for _, v := range except {
-		ShouldCheckHandles[runtime.FuncForPC(reflect.ValueOf(v).Pointer()).Name()] = false
+		ExceptHandles[runtime.FuncForPC(reflect.ValueOf(v).Pointer()).Name()] = true
 	}
 
 	return func(c *gin.Context) {
-		//同一个请求只验证一次就好了
-		if c.GetBool("JwtAuthMiddleware") {
-			c.Next()
-			return
-		}
-
 		var data *Payload
 		var err error
 		//根据请求头来判断返回的数据格式
@@ -50,17 +44,14 @@ func JwtAuthMiddleware(except ...gin.HandlerFunc) gin.HandlerFunc {
 
 			data, err = ValidateAuthToken(token)
 
-			//是否需要验证这个handles
-			if ShouldCheckHandles[c.HandlerName()] {
+			if !ExceptHandles[c.HandlerName()] {
 				if err != nil {
 					c.Redirect(http.StatusTemporaryRedirect, "/login")
 					fmt.Fprintf(gin.DefaultErrorWriter, "invalid token:%v", err.Error())
 					return
 				}
 			}
-
 		} else {
-
 			//API注意请求头为"application/json"
 			if data, err = ValidateAuthToken(strings.TrimSpace(c.GetHeader("token"))); err != nil {
 				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -72,7 +63,6 @@ func JwtAuthMiddleware(except ...gin.HandlerFunc) gin.HandlerFunc {
 			}
 		}
 
-		c.Set("JwtAuthMiddleware", true)
 		c.Set("payload", data)
 		c.Next()
 	}

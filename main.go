@@ -2,6 +2,8 @@
 package main
 
 import (
+	"html/template"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/qclaogui/goforum/config"
@@ -23,6 +25,11 @@ func InitRoutes() *gin.Engine {
 	store := sessions.NewCookieStore([]byte("forum"))
 	r := gin.New()
 
+	r.SetFuncMap(template.FuncMap{
+		"csrf_field": CsrfField,
+		"Check":      AuthCheck,
+	})
+
 	r.StaticFile("/favicon.ico", "resources/assets/favicon.ico")
 	r.Static("/assets", "resources/assets")
 	r.LoadHTMLGlob("resources/views/**/*")
@@ -37,6 +44,7 @@ func InitRoutes() *gin.Engine {
 			AuthControllerActionShowLoginPage,
 			AuthControllerActionShowRegisterPage,
 		),
+		VerifyCsrfToken(),
 	)
 
 	//about login register

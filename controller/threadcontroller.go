@@ -37,11 +37,12 @@ func ThreadControllerActionIndex(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "thread/index.html", gin.H{
-		"host":    "http://" + c.Request.Host,
-		"css":     "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":      "http://" + c.Request.Host + "/assets/js/app.js",
-		"isLogin": authCheck(c),
-		"threads": threads,
+		"host":       "http://" + c.Request.Host,
+		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
+		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
+		"isLogin":    authCheck(c),
+		"threads":    threads,
+		"ginContext": c,
 	})
 }
 
@@ -71,23 +72,25 @@ func ThreadControllerActionShow(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "thread/show.html", gin.H{
-		"host":    "http://" + c.Request.Host,
-		"css":     "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":      "http://" + c.Request.Host + "/assets/js/app.js",
-		"isLogin": authCheck(c),
-		"thread":  thread,
+		"host":       "http://" + c.Request.Host,
+		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
+		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
+		"isLogin":    authCheck(c),
+		"thread":     thread,
+		"ginContext": c,
 	})
 }
 
 //ShowCreatePage
 func ThreadControllerActionShowCreatePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "thread/create.html", gin.H{
-		"host":    "http://" + c.Request.Host,
-		"css":     "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":      "http://" + c.Request.Host + "/assets/js/app.js",
-		"isLogin": authCheck(c),
-		"title":   "Welcome go forum",
-		"content": "You are logged in!",
+		"host":       "http://" + c.Request.Host,
+		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
+		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
+		"isLogin":    authCheck(c),
+		"title":      "Welcome go forum",
+		"content":    "You are logged in!",
+		"ginContext": c,
 	})
 }
 
@@ -110,11 +113,12 @@ func ThreadControllerActionShowEditPage(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "thread/edit.html", gin.H{
-		"host":    "http://" + c.Request.Host,
-		"css":     "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":      "http://" + c.Request.Host + "/assets/js/app.js",
-		"isLogin": authCheck(c),
-		"thread":  thread,
+		"host":       "http://" + c.Request.Host,
+		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
+		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
+		"isLogin":    authCheck(c),
+		"thread":     thread,
+		"ginContext": c,
 	})
 }
 

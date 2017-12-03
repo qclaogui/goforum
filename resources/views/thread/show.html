@@ -10,11 +10,12 @@
                         <span class="flex">
                             {{ .thread.Title }}
                         </span>
-                    {{/*@can('update',$thread)*/}}
+                    {{if .ginContext|Check}}
                         <form action="{{.host}}/t/delete/{{.thread.ID}}" method="post">
+                        {{.ginContext|csrf_field}}
                             <button class="btn btn-danger">DELETE</button>
                         </form>
-                    {{/*@endcan*/}}
+                    {{end}}
                     </div>
                 </div>
 
