@@ -19,9 +19,9 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Browse <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="/t">All Threads</a></li>
-                        {{/*@if(auth()->check())*/}}
-                        {{/*<li><a href="/t?by=go">My Threads</a></li>*/}}
-                        {{/*@endif*/}}
+                        {{if .ginContext|Check}}
+                        <li><a href="/t?by=go">My Threads</a></li>
+                        {{end}}
                     </ul>
                 </li>
                 <li><a href="/t/create">New Thread</a></li>
@@ -38,7 +38,7 @@
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
-            {{if .isLogin}}<li class="dropdown">
+            {{if .ginContext|Check}}<li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         qclaogui <span class="caret"></span>
                     </a>
