@@ -38,9 +38,3 @@ func AuthUser(c *gin.Context) (*Payload, bool) {
 
 	return data, true
 }
-
-/**
- * Determine if the current user is authenticated.
- *
- * @return bool
- */

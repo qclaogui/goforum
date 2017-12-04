@@ -40,7 +40,6 @@ func ThreadControllerActionIndex(c *gin.Context) {
 		"host":       "http://" + c.Request.Host,
 		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
 		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
-		"isLogin":    authCheck(c),
 		"threads":    threads,
 		"ginContext": c,
 	})
@@ -75,7 +74,6 @@ func ThreadControllerActionShow(c *gin.Context) {
 		"host":       "http://" + c.Request.Host,
 		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
 		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
-		"isLogin":    authCheck(c),
 		"thread":     thread,
 		"ginContext": c,
 	})
@@ -87,7 +85,6 @@ func ThreadControllerActionShowCreatePage(c *gin.Context) {
 		"host":       "http://" + c.Request.Host,
 		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
 		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
-		"isLogin":    authCheck(c),
 		"title":      "Welcome go forum",
 		"content":    "You are logged in!",
 		"ginContext": c,
@@ -116,7 +113,6 @@ func ThreadControllerActionShowEditPage(c *gin.Context) {
 		"host":       "http://" + c.Request.Host,
 		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
 		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
-		"isLogin":    authCheck(c),
 		"thread":     thread,
 		"ginContext": c,
 	})

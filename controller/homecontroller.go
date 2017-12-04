@@ -21,7 +21,6 @@ func HomeControllerActionIndex(c *gin.Context) {
 		"host":       "http://" + c.Request.Host,
 		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
 		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
-		"isLogin":    authCheck(c),
 		"title":      "Welcome go forum",
 		"content":    "You are logged in!",
 		"ginContext": c,

@@ -1,6 +1,6 @@
 /*
 |--------------------------------------------------------------------------
-| Thread Controller
+| Welcome Controller
 |--------------------------------------------------------------------------
 |
 | This controller is WelcomePage
@@ -21,7 +21,6 @@ func WelcomeControllerActionIndex(c *gin.Context) {
 		"host":       "http://" + c.Request.Host,
 		"title":      "Welcome",
 		"content":    "Let's go a forum",
-		"isLogin":    authCheck(c),
 		"ginContext": c,
 	})
 }
