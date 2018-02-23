@@ -30,9 +30,11 @@ func InitRoutes() *gin.Engine {
 		"Check":      AuthCheck,
 	})
 
-	r.StaticFile("/favicon.ico", "resources/assets/favicon.ico")
-	r.Static("/assets", "resources/assets")
-	r.LoadHTMLGlob("resources/views/**/*")
+	respath := filepath.Join(os.Getenv("GOPATH"), "src/github.com/qclaogui/goforum")
+
+	r.StaticFile("/favicon.ico", respath+"/resources/assets/favicon.ico")
+	r.Static("/assets", respath+"/resources/assets")
+	r.LoadHTMLGlob(respath + "/resources/views/**/*")
 
 	r.Use(
 		gin.Logger(),
