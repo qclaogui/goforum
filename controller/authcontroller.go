@@ -16,11 +16,13 @@ import (
 	. "github.com/qclaogui/goforum/model"
 )
 
+type AuthController struct{}
+
 /**
  * the current user is authenticated.
  *
  */
-func AuthControllerActionLogin(c *gin.Context) {
+func (a *AuthController) Login(c *gin.Context) {
 
 	if err := ValidatePostFromParams(c, "email", "password"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -69,16 +71,33 @@ func AuthControllerActionLogin(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/home")
 }
 
-//logout
-func AuthControllerActionLogout(c *gin.Context) {
+func (a *AuthController) Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Clear()
 	session.Save()
 	c.Redirect(http.StatusFound, "/home")
 }
 
-//register
-func AuthControllerActionRegister(c *gin.Context) {
+//show register form
+func (a *AuthController) Create(c *gin.Context) {
+
+	isLogin := authCheck(c)
+	if isLogin {
+		c.Redirect(http.StatusFound, "/home")
+		return
+	}
+
+	c.HTML(http.StatusOK, "auth/register.html", gin.H{
+		"host":       "http://" + c.Request.Host,
+		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
+		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
+		"data":       c.Request.Proto,
+		"ginContext": c,
+	})
+}
+
+//register a new user
+func (a *AuthController) Store(c *gin.Context) {
 
 	if err := ValidatePostFromParams(c, "name", "email", "password"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -127,29 +146,9 @@ func AuthControllerActionRegister(c *gin.Context) {
 		})
 		return
 	}
-
 }
 
-//show register form
-func AuthControllerActionShowRegisterPage(c *gin.Context) {
-
-	isLogin := authCheck(c)
-	if isLogin {
-		c.Redirect(http.StatusFound, "/home")
-		return
-	}
-
-	c.HTML(http.StatusOK, "auth/register.html", gin.H{
-		"host":       "http://" + c.Request.Host,
-		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
-		"data":       c.Request.Proto,
-		"ginContext": c,
-	})
-}
-
-//show login form
-func AuthControllerActionShowLoginPage(c *gin.Context) {
+func (a *AuthController) ShowLoginPage(c *gin.Context) {
 
 	isLogin := authCheck(c)
 	if isLogin {

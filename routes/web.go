@@ -2,33 +2,33 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	. "github.com/qclaogui/goforum/controller"
 	. "github.com/qclaogui/goforum/middleware"
 )
 
 func WebGroup(r *gin.Engine) {
 
-	r.GET("", WelcomeControllerActionIndex)
-	r.GET("/home", HomeControllerActionIndex)
+	r.GET("", welcomeCtl.Index)
+
+	r.GET("/home", homeCtl.Index)
 
 	thread := r.Group("/t", JwtAuthMiddleware(
-		ThreadControllerActionShow,
-		ThreadControllerActionIndex,
+		threadCtl.Show,
+		threadCtl.Index,
 	))
 	{
-		thread.GET("", ThreadControllerActionIndex)
-		thread.GET("show/:tid", ThreadControllerActionShow)
+		thread.GET("", threadCtl.Index)
+		thread.GET("show/:tid", threadCtl.Show)
 
 		//Add Thread
-		thread.GET("create", ThreadControllerActionShowCreatePage)
-		thread.POST("store", ThreadControllerActionStore)
+		thread.GET("create", threadCtl.Create)
+		thread.POST("store", threadCtl.Store)
 
 		//Edit Thread
-		thread.GET("edit/:tid", ThreadControllerActionShowEditPage)
-		thread.POST("edit/:tid", ThreadControllerActionEdit)
+		thread.GET("edit/:tid", threadCtl.Edit)
+		thread.POST("edit/:tid", threadCtl.Update)
 
 		//Delete Thread
-		thread.POST("delete/:tid", ThreadControllerActionDestroy)
+		thread.POST("delete/:tid", threadCtl.Destroy)
 
 	}
 

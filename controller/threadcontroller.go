@@ -15,8 +15,10 @@ import (
 	. "github.com/qclaogui/goforum/model"
 )
 
+type ThreadController struct{}
+
 //get All Threads
-func ThreadControllerActionIndex(c *gin.Context) {
+func (t *ThreadController) Index(c *gin.Context) {
 
 	db := forumDB(c)
 
@@ -45,8 +47,7 @@ func ThreadControllerActionIndex(c *gin.Context) {
 	})
 }
 
-func ThreadControllerActionShow(c *gin.Context) {
-
+func (t *ThreadController) Show(c *gin.Context) {
 	if err := ValidateParams(c, "tid"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"errors": err,
@@ -80,7 +81,7 @@ func ThreadControllerActionShow(c *gin.Context) {
 }
 
 //ShowCreatePage
-func ThreadControllerActionShowCreatePage(c *gin.Context) {
+func (t *ThreadController) Create(c *gin.Context) {
 	c.HTML(http.StatusOK, "thread/create.html", gin.H{
 		"host":       "http://" + c.Request.Host,
 		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
@@ -91,8 +92,22 @@ func ThreadControllerActionShowCreatePage(c *gin.Context) {
 	})
 }
 
+func (t *ThreadController) Store(c *gin.Context) {
+
+	if err := ValidatePostFromParams(c, "title", "body"); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+		return
+	}
+
+	(&Thread{}).Create(c, forumDB(c))
+
+	c.Redirect(http.StatusFound, "/t")
+}
+
 //ShowEditPage
-func ThreadControllerActionShowEditPage(c *gin.Context) {
+func (t *ThreadController) Edit(c *gin.Context) {
 
 	if err := ValidateParams(c, "tid"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -118,23 +133,7 @@ func ThreadControllerActionShowEditPage(c *gin.Context) {
 	})
 }
 
-//Store
-func ThreadControllerActionStore(c *gin.Context) {
-
-	if err := ValidatePostFromParams(c, "title", "body"); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"errors": err,
-		})
-		return
-	}
-
-	(&Thread{}).Create(c, forumDB(c))
-
-	c.Redirect(http.StatusFound, "/t")
-}
-
-//Edit
-func ThreadControllerActionEdit(c *gin.Context) {
+func (t *ThreadController) Update(c *gin.Context) {
 
 	if err := ValidateParams(c, "tid"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -160,7 +159,7 @@ func ThreadControllerActionEdit(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/t")
 }
 
-func ThreadControllerActionDestroy(c *gin.Context) {
+func (t *ThreadController) Destroy(c *gin.Context) {
 
 	if err := ValidateParams(c, "tid"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{

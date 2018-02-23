@@ -3,6 +3,8 @@ package main
 
 import (
 	"html/template"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -13,12 +15,13 @@ import (
 )
 
 func main() {
+
 	forum := InitRoutes()
 	forum.Run(":8321")
 }
 
 func InitRoutes() *gin.Engine {
-	gin.SetMode(gin.DebugMode)
+	//gin.SetMode(gin.DebugMode)
 	//初始化数据库
 	db := config.InitDatabase("mysql")
 	//session
@@ -36,15 +39,18 @@ func InitRoutes() *gin.Engine {
 	r.Static("/assets", respath+"/resources/assets")
 	r.LoadHTMLGlob(respath + "/resources/views/**/*")
 
+	authCtl := new(AuthController)
+	welcomeCtl := new(WelcomeController)
+
 	r.Use(
 		gin.Logger(),
 		gin.Recovery(),
 		DatabaseMiddleware(db),
 		sessions.Sessions("FID", store),
 		JwtAuthMiddleware(
-			WelcomeControllerActionIndex,
-			AuthControllerActionShowLoginPage,
-			AuthControllerActionShowRegisterPage,
+			welcomeCtl.Index,
+			authCtl.ShowLoginPage,
+			authCtl.Create,
 		),
 		VerifyCsrfToken(),
 	)

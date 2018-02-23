@@ -8,16 +8,17 @@ import (
 func AuthGroup(r *gin.Engine) {
 
 	//Authentication Routes...
-	r.GET("/login", AuthControllerActionShowLoginPage)
-	r.POST("/login", AuthControllerActionLogin)
+	r.GET("/login", authCtl.ShowLoginPage)
 
-	r.POST("/logout", AuthControllerActionLogout)
+	r.POST("/login", authCtl.Login)
+
+	r.POST("/logout", authCtl.Logout)
 
 	//Registration Routes...
-	r.GET("/register", AuthControllerActionShowRegisterPage)
-	r.POST("/register", AuthControllerActionRegister)
+	r.GET("/register", authCtl.Create)
+	r.POST("/register", authCtl.Store)
 
-	//Password Reset Routes...
+	//Password Reset Routes...TODO//
 	p := r.Group("/password")
 	{
 		p.GET("reset", ForgotPwdControllerActionShowRequestPage)

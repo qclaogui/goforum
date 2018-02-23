@@ -14,8 +14,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type HomeController struct{}
+
 //Home page
-func HomeControllerActionIndex(c *gin.Context) {
+func (h *HomeController) Index(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "home/index.html", gin.H{
 		"host":       "http://" + c.Request.Host,
