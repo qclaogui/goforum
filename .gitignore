@@ -13,3 +13,7 @@
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 goforum
+node_modules/
+
+public/storage/
+package-lock.json

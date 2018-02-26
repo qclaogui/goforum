@@ -34,9 +34,8 @@ func InitRoutes() *gin.Engine {
 	})
 
 	respath := filepath.Join(os.Getenv("GOPATH"), "src/github.com/qclaogui/goforum")
-
-	r.StaticFile("/favicon.ico", respath+"/resources/assets/favicon.ico")
-	r.Static("/assets", respath+"/resources/assets")
+	r.StaticFile("/favicon.ico", respath+"/public/favicon.ico")
+	r.Static("/assets", respath+"/public")
 	r.LoadHTMLGlob(respath + "/resources/views/**/*")
 
 	authCtl := new(AuthController)
