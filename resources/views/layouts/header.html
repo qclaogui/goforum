@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content={{.ginContext|csrf_token}}>
     <title>go forum</title>
     <style>
         body { padding-bottom: 100px; }
@@ -12,6 +13,6 @@
         .mr-1 { margin-right: 2em; }
         [v-cloak] { display: none; }
     </style>
-    <link rel="stylesheet" href="{{ .css }}">
+    <link rel="stylesheet" href="{{ "css/forum.css"| mix }}">
 </head>
 <body>{{ end }}

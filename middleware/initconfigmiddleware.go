@@ -1,22 +1,21 @@
 /*
 |--------------------------------------------------------------------------
-| DatabaseMiddleware
+| InitConfigMiddleware
 |--------------------------------------------------------------------------
 |
-| init database
+| init config
 |
 */
 package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	"github.com/qclaogui/goforum/config"
 )
 
-//初始化数据库
-func DatabaseMiddleware(db *gorm.DB) gin.HandlerFunc {
+func InitConfigMiddleware(config *config.APP) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Set("database", db)
+		c.Set("config", config)
 		c.Next()
 	}
 }

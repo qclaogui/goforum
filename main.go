@@ -22,15 +22,15 @@ func main() {
 
 func InitRoutes() *gin.Engine {
 	//gin.SetMode(gin.DebugMode)
-	//初始化数据库
-	db := config.InitDatabase("mysql")
 	//session
 	store := sessions.NewCookieStore([]byte("forum"))
-	r := gin.New()
 
+	r := gin.New()
 	r.SetFuncMap(template.FuncMap{
 		"csrf_field": CsrfField,
+		"csrf_token": CsrfTokenValue,
 		"Check":      AuthCheck,
+		"mix":        Mix,
 	})
 
 	respath := filepath.Join(os.Getenv("GOPATH"), "src/github.com/qclaogui/goforum")
@@ -44,7 +44,7 @@ func InitRoutes() *gin.Engine {
 	r.Use(
 		gin.Logger(),
 		gin.Recovery(),
-		DatabaseMiddleware(db),
+		InitConfigMiddleware(config.AppConfig),
 		sessions.Sessions("FID", store),
 		JwtAuthMiddleware(
 			welcomeCtl.Index,
