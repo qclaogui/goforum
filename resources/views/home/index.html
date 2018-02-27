@@ -1,8 +1,6 @@
 {{ define "home/index.html" }}
 {{template "layouts/header.html" .}}
 {{template "layouts/nav.html" .}}
-<div id="app">
     <home-component body="{{ .content}}"></home-component>
-</div>
-{{template "layouts/footer.html" .}}
+{{template "layouts/footer.html"}}
 {{ end }}

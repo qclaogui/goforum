@@ -1,61 +1,61 @@
 {{ define "layouts/nav.html" }}
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-expand-md navbar-light navbar-forum">
     <div class="container">
-        <div class="navbar-header">
-            <!-- Collapsed Hamburger -->
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                <span class="sr-only">Toggle Navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+        <a class="navbar-brand" href="/">forum</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#app-navbar-collapse"
+                aria-controls="app-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-            <!-- Branding Image -->
-            <a class="navbar-brand" href="/">forum</a>
-        </div>
+
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
             <!-- Left Side Of Navbar -->
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Browse <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/t">All Threads</a></li>
-                        {{if .ginContext|Check}}
-                        <li><a href="/t?by=go">My Threads</a></li>
-                        {{end}}
-                    </ul>
-                </li>
-                <li><a href="/t/create">New Thread</a></li>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
 
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Channels <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                    {{/*@foreach( $channels as $channel)*/}}
-                        {{/*<li><a href="/t/"></a></li>*/}}
-                    {{/*@endforeach*/}}
-                    </ul>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Browse
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a href="/t" class="dropdown-item">All Threads</a>
+                    {{if .ginContext|Check}}
+                        <div class="dropdown-divider"></div>
+                        <a href="/t?by=go" class="dropdown-item">My Threads</a>
+                    {{end}}
+                    </div>
+                </li>
+
+                <li class="nav-item active">
+                    <a class="nav-link" href="/t/create">New Thread <span class="sr-only">(current)</span></a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Channels <span class="caret"></span></a>
+                    <div class="dropdown-menu">
+                        <a href="/t" class="dropdown-item">ok</a>
+                        <a href="/t" class="dropdown-item">yes</a>
+                    </div>
                 </li>
             </ul>
             <!-- Right Side Of Navbar -->
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
-            {{if .ginContext|Check}}<li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            {{if .ginContext|Check}}<li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
                         qclaogui <span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <a href="/logout" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                    <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item" href="/logout" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                 Logout
                             </a>
                             <form id="logout-form" action="/logout" method="POST" style="display: none;">
                             {{.ginContext|csrf_field}}
                             </form>
-                        </li>
-                    </ul>
-                </li>{{else}}<li><a href="/login">Login</a></li>
-                <li><a href="/register">Register</a></li>{{end}}
+                    </div>
+                </li>{{else}}<li><a href="/login" class="nav-link">Login</a></li>
+                <li><a href="/register" class="nav-link">Register</a></li>{{end}}
             </ul>
         </div>
     </div>
-</nav>
-{{end}}
+</nav><main class="py-4">{{end}}

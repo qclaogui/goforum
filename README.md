@@ -12,7 +12,41 @@
 
  ## Getting started
 
- TODO
+   pull down the code with `go get`:
+
+   ```
+   go get github.com/qclaogui/goforum
+   ```
+
+   make sure you have `dep` installed
+
+   ```
+   go get -u github.com/golang/dep/cmd/dep
+   ```
+
+   Go into the source directory and pull down the project dependencies:
+
+   ```
+   cd $GOPATH/src/github.com/qclaogui/goforum
+
+   npm install
+
+   dep ensure
+   ```
+
+ ## Edit configuration
+
+   Before we set up all the tables in your database, our code depends on a small few configuration files,
+   you also need to create your database(now we use mysql)
+
+   ```
+   cp app.yml.example app.yml
+   ```
+   Now run
+
+   ```
+   go run main.go
+   ```
 
 
  ## License

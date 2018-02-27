@@ -32,7 +32,7 @@ func (a *AuthController) Login(c *gin.Context) {
 	}
 
 	user := &User{}
-	if err := forumDB(c).Where("email=?", c.PostForm("email")).Limit(1).Find(&user).Error; err != nil {
+	if err := forumC.DB.Where("email=?", c.PostForm("email")).Limit(1).Find(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error_code": 40002,
 			"message":    err.Error(),
@@ -88,9 +88,6 @@ func (a *AuthController) Create(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "auth/register.html", gin.H{
-		"host":       "http://" + c.Request.Host,
-		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
 		"data":       c.Request.Proto,
 		"ginContext": c,
 	})
@@ -106,16 +103,15 @@ func (a *AuthController) Store(c *gin.Context) {
 		return
 	}
 
-	db := forumDB(c)
 	u := User{
 		Name:     c.PostForm("name"),
 		Email:    c.PostForm("email"),
 		Password: c.PostForm("password"),
 	}
-	if db.Where("email=?", u.Email).Limit(1).Find(&u).RecordNotFound() {
+	if forumC.DB.Where("email=?", u.Email).Limit(1).Find(&u).RecordNotFound() {
 		u.RememberToken = RandomString(40)
 		u.Password = BCryptPassword(u.Password + u.RememberToken)
-		db.Create(&u)
+		forumC.DB.Create(&u)
 
 		//jwtToken
 		token, _ := GenerateJwtAuthToken(&PayloadClaims{
@@ -157,9 +153,6 @@ func (a *AuthController) ShowLoginPage(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "auth/login.html", gin.H{
-		"host":       "http://" + c.Request.Host,
-		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
 		"content":    "Login",
 		"checked":    "checked",
 		"ginContext": c,

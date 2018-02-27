@@ -2,16 +2,16 @@
 {{template "layouts/header.html" .}}
 {{template "layouts/nav.html" .}}
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+    <div class="row justify-content-center">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
                     <div class="level">
                         <span class="flex">
                             {{ .thread.Title }}
                         </span>
                     {{if .ginContext|Check}}
-                        <form action="{{.host}}/t/delete/{{.thread.ID}}" method="post">
+                        <form action="/t/delete/{{.thread.ID}}" method="post">
                         {{.ginContext|csrf_field}}
                             <button class="btn btn-danger">DELETE</button>
                         </form>
@@ -19,13 +19,13 @@
                     </div>
                 </div>
 
-                <div class="panel-body">{{ .thread.Body }}</div>
+                <div class="card-body">{{ .thread.Body }}</div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-8 offset-md-2">
             {{ range .thread.Replies }}
                 {{ template "thread/reply.html" .}}
             {{ end }}

@@ -20,14 +20,12 @@ type ThreadController struct{}
 //get All Threads
 func (t *ThreadController) Index(c *gin.Context) {
 
-	db := forumDB(c)
-
 	var threads []Thread
 
-	db.Debug().Find(&threads)
+	forumC.DB.Debug().Find(&threads)
 
 	for i, v := range threads {
-		v.WithUser(db)
+		v.WithUser(forumC.DB)
 		threads[i] = v
 	}
 
@@ -39,9 +37,6 @@ func (t *ThreadController) Index(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "thread/index.html", gin.H{
-		"host":       "http://" + c.Request.Host,
-		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
 		"threads":    threads,
 		"ginContext": c,
 	})
@@ -55,7 +50,7 @@ func (t *ThreadController) Show(c *gin.Context) {
 		return
 	}
 
-	thread, err := (&Thread{}).FindById(c, forumDB(c), "User", "Reply")
+	thread, err := (&Thread{}).FindById(c, forumC.DB, "User", "Reply")
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -72,9 +67,6 @@ func (t *ThreadController) Show(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "thread/show.html", gin.H{
-		"host":       "http://" + c.Request.Host,
-		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
 		"thread":     thread,
 		"ginContext": c,
 	})
@@ -83,9 +75,6 @@ func (t *ThreadController) Show(c *gin.Context) {
 //ShowCreatePage
 func (t *ThreadController) Create(c *gin.Context) {
 	c.HTML(http.StatusOK, "thread/create.html", gin.H{
-		"host":       "http://" + c.Request.Host,
-		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
 		"title":      "Welcome go forum",
 		"content":    "You are logged in!",
 		"ginContext": c,
@@ -101,7 +90,7 @@ func (t *ThreadController) Store(c *gin.Context) {
 		return
 	}
 
-	(&Thread{}).Create(c, forumDB(c))
+	(&Thread{}).Create(c, forumC.DB)
 
 	c.Redirect(http.StatusFound, "/t")
 }
@@ -116,7 +105,7 @@ func (t *ThreadController) Edit(c *gin.Context) {
 		return
 	}
 
-	thread, err := (&Thread{}).FindById(c, forumDB(c))
+	thread, err := (&Thread{}).FindById(c, forumC.DB)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"errors": err.Error(),
@@ -125,9 +114,6 @@ func (t *ThreadController) Edit(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "thread/edit.html", gin.H{
-		"host":       "http://" + c.Request.Host,
-		"css":        "http://" + c.Request.Host + "/assets/css/app.css",
-		"js":         "http://" + c.Request.Host + "/assets/js/app.js",
 		"thread":     thread,
 		"ginContext": c,
 	})
@@ -149,7 +135,7 @@ func (t *ThreadController) Update(c *gin.Context) {
 		return
 	}
 
-	if err := (&Thread{}).Edit(c, forumDB(c)); err != nil {
+	if err := (&Thread{}).Edit(c, forumC.DB); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"errors": err.Error(),
 		})
@@ -168,7 +154,7 @@ func (t *ThreadController) Destroy(c *gin.Context) {
 		return
 	}
 
-	if err := (&Thread{}).DestroyById(c, forumDB(c)); err != nil {
+	if err := (&Thread{}).DestroyById(c, forumC.DB); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"errors": err.Error(),
 		})

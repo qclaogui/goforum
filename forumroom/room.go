@@ -44,6 +44,7 @@ type (
 
 var Mid uint64
 
+//New forum Room
 func NewRoom() *Room {
 	return &Room{
 		broadcast: make(chan []byte),

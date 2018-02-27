@@ -1,7 +1,6 @@
 {{define "passwords/reset.html"}}
 {{template "layouts/header.html" .}}
 {{template "layouts/nav.html" .}}
-<div id="app">
 
 <div class="container">
     <div class="row">
@@ -12,7 +11,7 @@
                 {{/*@if (session('status'))*/}}
                 {{/*<div class="alert alert-success">{{ session('status') }}</div>*/}}
                 {{/*@endif*/}}
-                    <form class="form-horizontal" role="form" method="POST" action="{{ .host }}/password/reset">
+                    <form class="form-horizontal" role="form" method="POST" action="/password/reset">
                     {{.ginContext|csrf_field}}
                         <input type="hidden" name="token" value="{{ .token }}">
                         <div class="form-group">
@@ -52,7 +51,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 {{template "layouts/footer.html" .}}
 {{end}}

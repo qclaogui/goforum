@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/jinzhu/gorm"
-	"github.com/qclaogui/goforum/migrations"
+	. "github.com/qclaogui/goforum/model"
 	"github.com/spf13/viper"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -33,14 +33,10 @@ func LoadConfig() *APP {
 }
 
 func (a *APP) readConfig() {
-
 	v := viper.New()
-	configExt := "yaml"
-	configPath := filepath.Join(os.Getenv("GOPATH"), "src/github.com/qclaogui/goforum/config/"+configExt)
-
 	v.SetConfigName("app")
-	v.AddConfigPath(configPath)
-	v.SetConfigType(configExt)
+	v.AddConfigPath(filepath.Join(os.Getenv("GOPATH"), "src/github.com/qclaogui/goforum"))
+	v.SetConfigType("yaml")
 	v.ReadInConfig()
 
 	a.Config = v
@@ -57,6 +53,13 @@ func (a *APP) initDB() {
 	if err != nil {
 		panic(err)
 	}
-	migrations.ForumTablesAutoMigrate(db)
+
+	db.AutoMigrate(
+		&User{},
+		&Thread{},
+		&Channel{},
+		&Reply{},
+	)
+
 	a.DB = db
 }
