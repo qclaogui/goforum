@@ -10,24 +10,26 @@ import (
 )
 
 type (
+	//Payload data
 	Payload struct {
-		UserId uint   `json:"user_id"`
+		UserID uint   `json:"user_id"`
 		Name   string `json:"name"`
 	}
+	//PayloadClaims data
 	PayloadClaims struct {
 		Data Payload `json:"data"`
 		jwt.StandardClaims
 	}
 )
 
-//生成jwtToken
+//GenerateJwtAuthToken generate a new jwtAuthToken
 func GenerateJwtAuthToken(claims *PayloadClaims) (string, error) {
 	claims.ExpiresAt = time.Now().Add(time.Hour * 24).Unix()
 	claims.Issuer = "qclaogui"
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte("Go"))
 }
 
-//验证用户jwtToken
+//ValidateAuthToken validate user jwtToken
 func ValidateAuthToken(tokenString string) (*Payload, error) {
 	var loadClaims PayloadClaims
 	token, err := jwt.ParseWithClaims(tokenString, &loadClaims, func(t *jwt.Token) (interface{}, error) {
@@ -39,6 +41,7 @@ func ValidateAuthToken(tokenString string) (*Payload, error) {
 	return &loadClaims.Data, nil
 }
 
+//CheckWebSocketToken validate user jwtToken from websocket
 func CheckWebSocketToken(r *http.Request) (*Payload, error) {
 	h := strings.TrimSpace(r.Header.Get("Sec-Websocket-Protocol"))
 	if h == "" {

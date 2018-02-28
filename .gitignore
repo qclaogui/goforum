@@ -17,3 +17,4 @@ node_modules/
 
 public/storage/
 package-lock.json
+app.yml

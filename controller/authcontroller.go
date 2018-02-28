@@ -1,11 +1,3 @@
-/*
-|--------------------------------------------------------------------------
-| Auth Controller
-|--------------------------------------------------------------------------
-|
-| This controller handles authenticating users login
-|
-*/
 package controller
 
 import (
@@ -13,25 +5,23 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	. "github.com/qclaogui/goforum/model"
+	"github.com/qclaogui/goforum/model"
 )
 
+//AuthController deal with user auth
 type AuthController struct{}
 
-/**
- * the current user is authenticated.
- *
- */
+//Login deal with user login
 func (a *AuthController) Login(c *gin.Context) {
 
-	if err := ValidatePostFromParams(c, "email", "password"); err != nil {
+	if err := model.ValidatePostFromParams(c, "email", "password"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"errors": err,
 		})
 		return
 	}
 
-	user := &User{}
+	user := &model.User{}
 	if err := forumC.DB.Where("email=?", c.PostForm("email")).Limit(1).Find(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error_code": 40002,
@@ -40,7 +30,7 @@ func (a *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	if !VerifyingPassword(user.Password, c.PostForm("password")+user.RememberToken) {
+	if !model.VerifyingPassword(user.Password, c.PostForm("password")+user.RememberToken) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error_code": 40002,
 			"message":    "密码错误",
@@ -49,9 +39,9 @@ func (a *AuthController) Login(c *gin.Context) {
 	}
 
 	//jwtToken
-	token, _ := GenerateJwtAuthToken(&PayloadClaims{
-		Data: Payload{
-			UserId: user.ID,
+	token, _ := model.GenerateJwtAuthToken(&model.PayloadClaims{
+		Data: model.Payload{
+			UserID: user.ID,
 			Name:   user.Name,
 		},
 	})
@@ -71,6 +61,7 @@ func (a *AuthController) Login(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/home")
 }
 
+//Logout deal with user Logout
 func (a *AuthController) Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Clear()
@@ -78,7 +69,7 @@ func (a *AuthController) Logout(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/home")
 }
 
-//show register form
+//Create deal with user Create
 func (a *AuthController) Create(c *gin.Context) {
 
 	isLogin := authCheck(c)
@@ -93,30 +84,30 @@ func (a *AuthController) Create(c *gin.Context) {
 	})
 }
 
-//register a new user
+//Store deal with user Store
 func (a *AuthController) Store(c *gin.Context) {
 
-	if err := ValidatePostFromParams(c, "name", "email", "password"); err != nil {
+	if err := model.ValidatePostFromParams(c, "name", "email", "password"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"errors": err,
 		})
 		return
 	}
 
-	u := User{
+	u := model.User{
 		Name:     c.PostForm("name"),
 		Email:    c.PostForm("email"),
 		Password: c.PostForm("password"),
 	}
 	if forumC.DB.Where("email=?", u.Email).Limit(1).Find(&u).RecordNotFound() {
-		u.RememberToken = RandomString(40)
-		u.Password = BCryptPassword(u.Password + u.RememberToken)
+		u.RememberToken = model.RandomString(40)
+		u.Password = model.BCryptPassword(u.Password + u.RememberToken)
 		forumC.DB.Create(&u)
 
 		//jwtToken
-		token, _ := GenerateJwtAuthToken(&PayloadClaims{
-			Data: Payload{
-				UserId: u.ID,
+		token, _ := model.GenerateJwtAuthToken(&model.PayloadClaims{
+			Data: model.Payload{
+				UserID: u.ID,
 				Name:   u.Name,
 			},
 		})
@@ -144,6 +135,7 @@ func (a *AuthController) Store(c *gin.Context) {
 	}
 }
 
+//ShowLoginPage return login page
 func (a *AuthController) ShowLoginPage(c *gin.Context) {
 
 	isLogin := authCheck(c)

@@ -1,11 +1,3 @@
-/*
-|--------------------------------------------------------------------------
-| Welcome Controller
-|--------------------------------------------------------------------------
-|
-| This controller is WelcomePage
-|
-*/
 package controller
 
 import (
@@ -14,9 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//WelcomeController welcome
 type WelcomeController struct{}
 
-//Home page
+//Index Welcome page
 func (w *WelcomeController) Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "welcome/index.html", gin.H{
 		"title":      "Welcome",

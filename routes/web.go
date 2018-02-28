@@ -2,16 +2,17 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	. "github.com/qclaogui/goforum/middleware"
+	"github.com/qclaogui/goforum/middleware"
 )
 
+//WebGroup return web group
 func WebGroup(r *gin.Engine) {
 
 	r.GET("", welcomeCtl.Index)
 
 	r.GET("/home", homeCtl.Index)
 
-	thread := r.Group("/t", JwtAuthMiddleware(
+	thread := r.Group("/t", middleware.JwtAuthMiddleware(
 		threadCtl.Show,
 		threadCtl.Index,
 	))

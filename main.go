@@ -1,4 +1,3 @@
-//Let‘s go a forum
 package main
 
 import "github.com/qclaogui/goforum/routes"

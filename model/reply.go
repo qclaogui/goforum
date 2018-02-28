@@ -1,8 +1,9 @@
 package model
 
+//Reply model
 type Reply struct {
 	Model
-	ThreadId int
-	UserId   int
+	ThreadID int
+	UserID   int
 	Body     string
 }

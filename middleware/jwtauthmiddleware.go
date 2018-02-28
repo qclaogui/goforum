@@ -1,11 +1,3 @@
-/*
-|--------------------------------------------------------------------------
-| JwtAuthMiddleware
-|--------------------------------------------------------------------------
-|
-| init database
-|
-*/
 package middleware
 
 import (
@@ -17,23 +9,20 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	. "github.com/qclaogui/goforum/model"
+	"github.com/qclaogui/goforum/model"
 )
 
+//ExceptHandles 表示需要放行的handlerFunc
 var ExceptHandles = make(map[string]bool, 50)
 
-/**
- * jwt token 验证
- *
- * except 表示需要放行的handlerFunc
- */
+// JwtAuthMiddleware jwt token 验证
 func JwtAuthMiddleware(except ...gin.HandlerFunc) gin.HandlerFunc {
 	for _, v := range except {
 		ExceptHandles[runtime.FuncForPC(reflect.ValueOf(v).Pointer()).Name()] = true
 	}
 
 	return func(c *gin.Context) {
-		var data *Payload
+		var data *model.Payload
 		var err error
 		//根据请求头来判断返回的数据格式
 		if "application/json" != c.GetHeader("Content-Type") {
@@ -42,7 +31,7 @@ func JwtAuthMiddleware(except ...gin.HandlerFunc) gin.HandlerFunc {
 			token, _ := session.Get("jwt-token").(string)
 			session.Save()
 
-			data, err = ValidateAuthToken(token)
+			data, err = model.ValidateAuthToken(token)
 
 			if !ExceptHandles[c.HandlerName()] {
 				if err != nil {
@@ -53,7 +42,7 @@ func JwtAuthMiddleware(except ...gin.HandlerFunc) gin.HandlerFunc {
 			}
 		} else {
 			//API注意请求头为"application/json"
-			if data, err = ValidateAuthToken(strings.TrimSpace(c.GetHeader("token"))); err != nil {
+			if data, err = model.ValidateAuthToken(strings.TrimSpace(c.GetHeader("token"))); err != nil {
 				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 					"error_code": 10000,
 					"message":    "invalid token",

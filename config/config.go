@@ -5,14 +5,17 @@ import (
 	"path/filepath"
 
 	"github.com/jinzhu/gorm"
-	. "github.com/qclaogui/goforum/model"
+	"github.com/qclaogui/goforum/model"
 	"github.com/spf13/viper"
 
+	//use mysql
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+//AppConfig return goforum config
 var AppConfig *APP
 
+//APP config
 type APP struct {
 	Config *viper.Viper
 	DB     *gorm.DB
@@ -22,6 +25,7 @@ func init() {
 	AppConfig = LoadConfig()
 }
 
+//LoadConfig returns an initialized APP.
 func LoadConfig() *APP {
 	a := new(APP)
 
@@ -55,10 +59,10 @@ func (a *APP) initDB() {
 	}
 
 	db.AutoMigrate(
-		&User{},
-		&Thread{},
-		&Channel{},
-		&Reply{},
+		&model.User{},
+		&model.Thread{},
+		&model.Channel{},
+		&model.Reply{},
 	)
 
 	a.DB = db

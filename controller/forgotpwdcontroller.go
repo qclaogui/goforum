@@ -1,38 +1,31 @@
-/*
-|--------------------------------------------------------------------------
-| ForgotPwd Controller
-|--------------------------------------------------------------------------
-|
-| This controller is responsible for handling password reset
-|
-*/
 package controller
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-//重置密码请求页面
-func ForgotPwdControllerActionShowRequestPage(c *gin.Context) {
-	//showLinkRequestForm
+//ForgotPwdController deal with user password
+type ForgotPwdController struct{}
+
+//ShowRequestPage return request page
+func (f *ForgotPwdController) ShowRequestPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "passwords/email.html", gin.H{
 		"content":    "RequestForm",
 		"ginContext": c,
 	})
 }
 
-//发送重置密码邮件
-func ForgotPwdControllerActionSendResetLinkEmail(c *gin.Context) {
-	//	sendResetLinkEmail
-	time.Sleep(2 * time.Second)
+//SendResetLinkEmail send a reset password email
+func (f *ForgotPwdController) SendResetLinkEmail(c *gin.Context) {
+
+	//	TODO sendResetLinkEmail
 	c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
-//重置页面
-func ForgotPwdControllerActionShowResetPage(c *gin.Context) {
+//ShowResetPage show reset page
+func (f *ForgotPwdController) ShowResetPage(c *gin.Context) {
 	//ShowResetForm
 	token := c.Param("token")
 	if token == "" {
@@ -45,7 +38,9 @@ func ForgotPwdControllerActionShowResetPage(c *gin.Context) {
 	})
 }
 
-//重置
-func ForgotPwdControllerActionReset(c *gin.Context) {
+//ResetPassword to reset current user password
+func (f *ForgotPwdController) ResetPassword(c *gin.Context) {
+
+	//	TODO Reset Password
 	c.String(http.StatusOK, c.PostForm("token"))
 }

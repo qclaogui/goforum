@@ -1,11 +1,3 @@
-/*
-|--------------------------------------------------------------------------
-| webSocket
-|--------------------------------------------------------------------------
-|
-| webSocket
-|
-*/
 package forumroom
 
 import (
@@ -14,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	. "github.com/qclaogui/goforum/model"
+	"github.com/qclaogui/goforum/model"
 )
 
 var wsUpGrader = websocket.Upgrader{
@@ -26,13 +18,14 @@ var wsUpGrader = websocket.Upgrader{
 	Subprotocols: []string{"forumToken"},
 }
 
+//ServerWS run forum room server
 func ServerWS(room *Room, w http.ResponseWriter, r *http.Request) {
 	wsConn, err := wsUpGrader.Upgrade(w, r, nil)
 	if err != nil {
 		fmt.Fprintf(gin.DefaultWriter, "Failed to set webSocket upgrade:%v", err)
 	}
 	//	验证token
-	_, err = CheckWebSocketToken(r)
+	_, err = model.CheckWebSocketToken(r)
 	if err != nil {
 		fmt.Fprintf(gin.DefaultWriter, "WebSocket Token Error:%v", err.Error())
 		msg := MESSAGE{

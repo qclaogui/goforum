@@ -7,50 +7,53 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+//Thread model
 type Thread struct {
 	Model
-	UserId       uint `gorm:"not null" json:"user_id"`
+	UserID       uint `gorm:"not null" json:"user_id"`
 	User         User
 	Replies      []Reply
-	ChannelId    uint   `gorm:"not null" json:"channel_id"`
+	ChannelID    uint   `gorm:"not null" json:"channel_id"`
 	RepliesCount uint   `json:"replies_count"`
 	Title        string `gorm:"not null" json:"title"`
 	Body         string `gorm:"not null;type:text" json:"body"`
 }
 
+//ThreadPath return a path
 func (t *Thread) ThreadPath() string {
 	return "/t/show"
 }
 
-//是否需要加载User
+//WithUser load User data
 func (t *Thread) WithUser(db *gorm.DB) {
 	var u User
-	db.Debug().Where("id=?", t.UserId).Limit(1).Find(&u)
+	db.Debug().Where("id=?", t.UserID).Limit(1).Find(&u)
 	t.User.ID = u.ID
 	t.User.Name = u.Name
 	t.User.Email = u.Email
 }
 
+//WithReplies load Replies data
 func (t *Thread) WithReplies(db *gorm.DB) {
 	var replies []Reply
 	db.Debug().Where("thread_id=?", t.ID).Limit(1000).Find(&replies)
 	t.Replies = replies
 }
 
-//add Thread
+//Create new Thread
 func (t *Thread) Create(c *gin.Context, db *gorm.DB) {
 
-	t.UserId = 1
+	t.UserID = 1
 	t.Title = c.PostForm("title")
 	t.Body = c.PostForm("body")
 
 	db.Create(t)
 }
 
-//Edit Thread
+//Edit a Thread
 func (t *Thread) Edit(c *gin.Context, db *gorm.DB) error {
 
-	t, err := t.FindById(c, db)
+	t, err := t.FindByID(c, db)
 	if err != nil {
 		return err
 	}
@@ -58,15 +61,17 @@ func (t *Thread) Edit(c *gin.Context, db *gorm.DB) error {
 	t.Title = c.PostForm("title")
 	t.Body = c.PostForm("body")
 
-	if err = db.Save(t).Error; err != nil {
+	err = db.Save(t).Error
+
+	if err != nil {
 		return err
 	}
 
 	return nil
 }
 
-//get Thread by thread id
-func (t *Thread) FindById(c *gin.Context, db *gorm.DB, with ...string) (*Thread, error) {
+//FindByID get Thread by thread id
+func (t *Thread) FindByID(c *gin.Context, db *gorm.DB, with ...string) (*Thread, error) {
 
 	if err := db.Where("id=?", c.Param("tid")).Limit(1).Find(t).Error; err != nil {
 		return nil, err
@@ -85,15 +90,17 @@ func (t *Thread) FindById(c *gin.Context, db *gorm.DB, with ...string) (*Thread,
 	return t, nil
 }
 
-//delete Thread by thread id
-func (t *Thread) DestroyById(c *gin.Context, db *gorm.DB) error {
+//DestroyByID delete Thread by thread id
+func (t *Thread) DestroyByID(c *gin.Context, db *gorm.DB) error {
 
-	t, err := t.FindById(c, db)
+	t, err := t.FindByID(c, db)
 	if err != nil {
 		return err
 	}
 
-	if err = db.Debug().Delete(t).Error; err != nil {
+	err = db.Debug().Delete(t).Error
+
+	if err != nil {
 		return err
 	}
 

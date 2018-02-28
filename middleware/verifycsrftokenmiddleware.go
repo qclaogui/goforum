@@ -17,11 +17,6 @@ const (
 	csrfToken  = "forum-csrfToken"
 )
 
-/**
- * Determine if the HTTP request uses a ‘read’ verb.
- *
- * @return bool
- */
 func isReading(c *gin.Context) bool {
 
 	for _, v := range []string{"HEAD", "GET", "OPTIONS"} {
@@ -33,19 +28,20 @@ func isReading(c *gin.Context) bool {
 	return false
 }
 
+//VerifyCsrfToken check csrf token
 func VerifyCsrfToken() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
 		session := sessions.Default(c)
-		var salt string
-		if s, ok := session.Get(csrfSalt).(string); !ok || len(s) == 0 {
+		salt, ok := session.Get(csrfSalt).(string)
+
+		if !ok || len(salt) == 0 {
 			CsrfToken(c)
 			c.Next()
 			return
-		} else {
-			salt = s
 		}
+
 		session.Delete(csrfSalt)
 
 		if isReading(c) || tokensMatch(c, salt) {
@@ -62,11 +58,7 @@ func VerifyCsrfToken() gin.HandlerFunc {
 	}
 }
 
-/**
- * Determine if the session and input CSRF tokens match.
- *
- * @return bool
- */
+// Determine if the session and input CSRF tokens match.
 func tokensMatch(c *gin.Context, salt string) bool {
 
 	return CreateCsrfToken(salt) == getCsrfTokenFromRequest(c)
@@ -86,12 +78,14 @@ func getCsrfTokenFromRequest(c *gin.Context) string {
 	return ""
 }
 
+//CreateCsrfToken new a token
 func CreateCsrfToken(salt string) string {
 	h := sha1.New()
 	io.WriteString(h, csrfSecret+salt)
 	return base64.URLEncoding.EncodeToString(h.Sum(nil))
 }
 
+//CsrfToken return a token value
 func CsrfToken(c *gin.Context) string {
 
 	session := sessions.Default(c)

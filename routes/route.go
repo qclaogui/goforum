@@ -7,23 +7,25 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	. "github.com/qclaogui/goforum/controller"
-	. "github.com/qclaogui/goforum/middleware"
+	"github.com/qclaogui/goforum/controller"
+	"github.com/qclaogui/goforum/middleware"
 )
 
-var welcomeCtl = new(WelcomeController)
-var threadCtl = new(ThreadController)
-var homeCtl = new(HomeController)
-var authCtl = new(AuthController)
+var welcomeCtl = new(controller.WelcomeController)
+var threadCtl = new(controller.ThreadController)
+var homeCtl = new(controller.HomeController)
+var authCtl = new(controller.AuthController)
+var forgotPwdCtl = new(controller.ForgotPwdController)
 
+//InitRoutes initialized forum routes
 func InitRoutes() *gin.Engine {
 	//gin.SetMode(gin.DebugMode)
 	r := gin.New()
 	r.SetFuncMap(template.FuncMap{
-		"csrf_field": CsrfField,
-		"csrf_token": CsrfTokenValue,
-		"Check":      AuthCheck,
-		"mix":        Mix,
+		"csrf_field": controller.CsrfField,
+		"csrf_token": controller.CsrfTokenValue,
+		"Check":      controller.AuthCheck,
+		"mix":        controller.Mix,
 	})
 
 	respath := filepath.Join(os.Getenv("GOPATH"), "src/github.com/qclaogui/goforum")
@@ -37,24 +39,20 @@ func InitRoutes() *gin.Engine {
 		gin.Logger(),
 		gin.Recovery(),
 		sessions.Sessions("FID", store),
-		JwtAuthMiddleware(
+		middleware.JwtAuthMiddleware(
 			welcomeCtl.Index,
 			authCtl.ShowLoginPage,
 			authCtl.Create,
 		),
-		VerifyCsrfToken(),
+		middleware.VerifyCsrfToken(),
 	)
 
-	//about login register
 	AuthGroup(r)
 
-	//web
 	WebGroup(r)
 
-	//api
-	ApiGroup(r)
+	APIGroup(r)
 
-	//WebSockets
 	WebSocketGroup(r)
 
 	return r

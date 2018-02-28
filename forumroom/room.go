@@ -27,6 +27,7 @@ const (
 )
 
 type (
+	//Room return a forum room
 	Room struct {
 		sync.RWMutex
 		clients   map[*Client]bool
@@ -34,17 +35,20 @@ type (
 		join      chan *Client
 		leave     chan *Client
 	}
+	//Client user
 	Client struct {
 		room *Room
 		conn *websocket.Conn
 		send chan []byte
 	}
+	//MESSAGE client message
 	MESSAGE map[string]interface{}
 )
 
+//Mid is id
 var Mid uint64
 
-//New forum Room
+//NewRoom return an initialized forum Room
 func NewRoom() *Room {
 	return &Room{
 		broadcast: make(chan []byte),
@@ -54,12 +58,14 @@ func NewRoom() *Room {
 	}
 }
 
+//AddClient user
 func (r *Room) AddClient(c *Client) {
 	r.Lock()
 	defer r.Unlock()
 	r.clients[c] = true
 }
 
+//RemoveClient Remove client from forum room
 func (r *Room) RemoveClient(c *Client) error {
 	r.Lock()
 	defer r.Unlock()
@@ -71,12 +77,14 @@ func (r *Room) RemoveClient(c *Client) error {
 	return nil
 }
 
+//TotalNums return room TotalNums
 func (r *Room) TotalNums() int {
 	r.RLock()
 	defer r.RUnlock()
 	return len(r.clients)
 }
 
+//BroadcastMsg Broadcast client message
 func (r *Room) BroadcastMsg(message []byte) {
 	r.Lock()
 	defer r.Unlock()
@@ -99,6 +107,7 @@ func (r *Room) BroadcastMsg(message []byte) {
 	}
 }
 
+//Run run service
 func (r *Room) Run() {
 	for {
 		select {
@@ -112,6 +121,7 @@ func (r *Room) Run() {
 	}
 }
 
+//ReceiveLoop Receive message
 func (c *Client) ReceiveLoop() {
 	defer func() {
 		c.room.leave <- c
@@ -140,6 +150,7 @@ func (c *Client) ReceiveLoop() {
 
 }
 
+//SendLoop send message
 func (c *Client) SendLoop() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {

@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//参数不能为空
+//ValidatePostFromParams 校验参数from c.PostForm不能为空
 func ValidatePostFromParams(c *gin.Context, params ...string) []gin.H {
 	var errors []gin.H
 	for _, p := range params {
@@ -18,6 +18,7 @@ func ValidatePostFromParams(c *gin.Context, params ...string) []gin.H {
 	return errors
 }
 
+//ValidateParams 校验参数from c.Param 不能为空
 func ValidateParams(c *gin.Context, params ...string) []gin.H {
 	var errors []gin.H
 	for _, p := range params {

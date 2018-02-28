@@ -5,6 +5,7 @@ import (
 	"github.com/qclaogui/goforum/forumroom"
 )
 
+//WebSocketGroup return websocket group
 func WebSocketGroup(r *gin.Engine) {
 
 	room := forumroom.NewRoom()

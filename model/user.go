@@ -1,5 +1,6 @@
 package model
 
+//User model
 type User struct {
 	Model
 	Name          string `gorm:"not null" json:"name" json:"name"`

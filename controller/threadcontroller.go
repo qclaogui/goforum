@@ -1,26 +1,19 @@
-/*
-|--------------------------------------------------------------------------
-| Thread Controller
-|--------------------------------------------------------------------------
-|
-| This controller is Thread(add, edit,delete)
-|
-*/
 package controller
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	. "github.com/qclaogui/goforum/model"
+	"github.com/qclaogui/goforum/model"
 )
 
+//ThreadController deal with thread
 type ThreadController struct{}
 
-//get All Threads
+//Index get All Threads
 func (t *ThreadController) Index(c *gin.Context) {
 
-	var threads []Thread
+	var threads []model.Thread
 
 	forumC.DB.Debug().Find(&threads)
 
@@ -42,15 +35,16 @@ func (t *ThreadController) Index(c *gin.Context) {
 	})
 }
 
+//Show a Thread
 func (t *ThreadController) Show(c *gin.Context) {
-	if err := ValidateParams(c, "tid"); err != nil {
+	if err := model.ValidateParams(c, "tid"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"errors": err,
 		})
 		return
 	}
 
-	thread, err := (&Thread{}).FindById(c, forumC.DB, "User", "Reply")
+	thread, err := (&model.Thread{}).FindByID(c, forumC.DB, "User", "Reply")
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -72,7 +66,7 @@ func (t *ThreadController) Show(c *gin.Context) {
 	})
 }
 
-//ShowCreatePage
+//Create return thread create page
 func (t *ThreadController) Create(c *gin.Context) {
 	c.HTML(http.StatusOK, "thread/create.html", gin.H{
 		"title":      "Welcome go forum",
@@ -81,31 +75,32 @@ func (t *ThreadController) Create(c *gin.Context) {
 	})
 }
 
+//Store a thread form request
 func (t *ThreadController) Store(c *gin.Context) {
 
-	if err := ValidatePostFromParams(c, "title", "body"); err != nil {
+	if err := model.ValidatePostFromParams(c, "title", "body"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"errors": err,
 		})
 		return
 	}
 
-	(&Thread{}).Create(c, forumC.DB)
+	(&model.Thread{}).Create(c, forumC.DB)
 
 	c.Redirect(http.StatusFound, "/t")
 }
 
-//ShowEditPage
+//Edit a thread form request
 func (t *ThreadController) Edit(c *gin.Context) {
 
-	if err := ValidateParams(c, "tid"); err != nil {
+	if err := model.ValidateParams(c, "tid"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"errors": err,
 		})
 		return
 	}
 
-	thread, err := (&Thread{}).FindById(c, forumC.DB)
+	thread, err := (&model.Thread{}).FindByID(c, forumC.DB)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"errors": err.Error(),
@@ -119,23 +114,24 @@ func (t *ThreadController) Edit(c *gin.Context) {
 	})
 }
 
+//Update a thread form request
 func (t *ThreadController) Update(c *gin.Context) {
 
-	if err := ValidateParams(c, "tid"); err != nil {
+	if err := model.ValidateParams(c, "tid"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"errors": err,
 		})
 		return
 	}
 
-	if err := ValidatePostFromParams(c, "title", "body"); err != nil {
+	if err := model.ValidatePostFromParams(c, "title", "body"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"errors": err,
 		})
 		return
 	}
 
-	if err := (&Thread{}).Edit(c, forumC.DB); err != nil {
+	if err := (&model.Thread{}).Edit(c, forumC.DB); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"errors": err.Error(),
 		})
@@ -145,16 +141,17 @@ func (t *ThreadController) Update(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/t")
 }
 
+//Destroy a thread form request
 func (t *ThreadController) Destroy(c *gin.Context) {
 
-	if err := ValidateParams(c, "tid"); err != nil {
+	if err := model.ValidateParams(c, "tid"); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"errors": err,
 		})
 		return
 	}
 
-	if err := (&Thread{}).DestroyById(c, forumC.DB); err != nil {
+	if err := (&model.Thread{}).DestroyByID(c, forumC.DB); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"errors": err.Error(),
 		})

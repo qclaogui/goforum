@@ -2,9 +2,9 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	. "github.com/qclaogui/goforum/controller"
 )
 
+//AuthGroup return auth group
 func AuthGroup(r *gin.Engine) {
 
 	//Authentication Routes...
@@ -18,12 +18,15 @@ func AuthGroup(r *gin.Engine) {
 	r.GET("/register", authCtl.Create)
 	r.POST("/register", authCtl.Store)
 
-	//Password Reset Routes...TODO//
+	//Password Reset Routes...
 	p := r.Group("/password")
 	{
-		p.GET("reset", ForgotPwdControllerActionShowRequestPage)
-		p.POST("email", ForgotPwdControllerActionSendResetLinkEmail)
-		p.GET("reset/:token", ForgotPwdControllerActionShowResetPage)
-		p.POST("reset", ForgotPwdControllerActionReset)
+		p.GET("reset", forgotPwdCtl.ShowRequestPage)
+
+		p.POST("email", forgotPwdCtl.SendResetLinkEmail)
+
+		p.GET("reset/:token", forgotPwdCtl.ShowResetPage)
+
+		p.POST("reset", forgotPwdCtl.ResetPassword)
 	}
 }
