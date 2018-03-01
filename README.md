@@ -1,10 +1,12 @@
 <div align=center><h1>goforum</h1></div>
 
 <p align="center">
+<a href="https://travis-ci.org/qclaogui/goforum"><img src="https://travis-ci.org/qclaogui/goforum.svg?branch=master"></a>
 <a href="https://github.com/qclaogui/goforum/issues?q=is%3Aopen+is%3Aissue"><img src="https://img.shields.io/github/issues/qclaogui/goforum.svg" alt="issues-open"></a>
 <a href="https://github.com/qclaogui/goforum/issues?q=is%3Aissue+is%3Aclosed"><img src="https://img.shields.io/github/issues-closed-raw/qclaogui/goforum.svg" alt="issues-closed"></a>
-<a href="https://github.com/qclaogui/goforum/blob/master/LICENSE"><img src="https://img.shields.io/github/license/qclaogui/goforum.svg" alt="License"></a>
 <a href="https://goreportcard.com/report/github.com/qclaogui/goforum"><img src="https://goreportcard.com/badge/github.com/qclaogui/goforum?v=1" /></a>
+<a href="https://godoc.org/github.com/qclaogui/goforum"><img src="https://godoc.org/github.com/qclaogui/goforum?status.svg"></a>
+<a href="https://github.com/qclaogui/goforum/blob/master/LICENSE"><img src="https://img.shields.io/github/license/qclaogui/goforum.svg" alt="License"></a>
 </p>
 
 
@@ -29,7 +31,7 @@ goforum use Gin + Vue . [laravel](https://github.com/laravel/laravel) and [larav
    go get -u github.com/golang/dep/cmd/dep
    ```
 
-   (TODO)Go into the source directory and pull down the project dependencies.:
+   Go into the source directory and pull down the project dependencies.:
 
    ```
    cd $GOPATH/src/github.com/qclaogui/goforum
@@ -43,11 +45,15 @@ goforum use Gin + Vue . [laravel](https://github.com/laravel/laravel) and [larav
    you also need to create your database(now we use mysql)
 
    ```
+   cd $GOPATH/src/github.com/qclaogui/goforum
+
    cp app.yml.example app.yml
    ```
    Now run
 
    ```
+   cd $GOPATH/src/github.com/qclaogui/goforum
+
    go run main.go
    ```
  ## Development
@@ -55,6 +61,8 @@ goforum use Gin + Vue . [laravel](https://github.com/laravel/laravel) and [larav
  To start developing, this project requires NodeJS to build the sources,  you have to execute only a few commands
 
    ```
+   cd $GOPATH/src/github.com/qclaogui/goforum
+   
    npm install
 
    npm run watch
@@ -62,4 +70,4 @@ goforum use Gin + Vue . [laravel](https://github.com/laravel/laravel) and [larav
 
  ## License
 
- The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+ This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
