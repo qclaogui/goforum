@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/qclaogui/goforum/config"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -12,6 +13,20 @@ type Model struct {
 	ID        uint      `gorm:"primary_key" json:"id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+//forum config
+var forumC *config.APP
+
+func init() {
+	forumC = config.AppConfig
+
+	forumC.DB.AutoMigrate(
+		&User{},
+		&Thread{},
+		&Channel{},
+		&Reply{},
+	)
 }
 
 const alphaNum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"

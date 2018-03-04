@@ -9,18 +9,6 @@
 <div class="card-body">
 <form action="/t/store" method="POST">
 {{.ginContext|csrf_field}}
-{{/*<div class="form-group">*/}}
-    {{/*<label for="channel_id">Choose a Channel:</label>*/}}
-{{/*<select name = "channel_id" class="form-control" id="channel_id" placeholder="">*/}}
-    {{/*<option value="">Choose a Channel</option>*/}}
-    {{/*@foreach($channels as $channel)*/}}
-        {{/*<option value="{{ $channel->id }}" {{ old('channel_id') == $channel->id ? 'selected' : '' }}>*/}}
-{{/*{{ $channel->name }}*/}}
-{{/*</option>*/}}
-    {{/*@endforeach*/}}
-{{/*</select>*/}}
-{{/*</div>*/}}
-
 <div class="form-group row">
     <label for="title" class="col-md-2 col-form-label text-md-right">Title:</label>
     <div class="col-md-8">
@@ -39,13 +27,6 @@
             <button type="submit" class="btn btn-primary">发布</button>
         </div>
     </div>
-    {{/*@if(count($errors))*/}}
-{{/*<ul class="alert alert-danger">*/}}
-    {{/*@foreach($errors->all() as $error)*/}}
-{{/*<li>{{ $error }}</li>*/}}
-    {{/*@endforeach*/}}
-{{/*</ul>*/}}
-    {{/*@endif*/}}
 </form>
 
 </div>

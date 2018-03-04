@@ -8,7 +8,8 @@
                 <div class="card-header">
                     <div class="level">
                         <span class="flex">
-                            {{ .thread.Title }}
+                            <a href="#">{{ .thread.User.Name }}</a>
+                        {{ .thread.Title }}
                         </span>
                     {{if .ginContext|Check}}
                         <form action="/t/delete/{{.thread.ID}}" method="post">
@@ -24,7 +25,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-8 offset-md-2">
             {{ range .thread.Replies }}
                 {{ template "thread/reply.html" .}}
@@ -32,27 +33,25 @@
         </div>
     </div>
 
+<br>
+{{if .ginContext | Check}}<div class="row justify-content-center">
+<div class="col-md-8 offset-md-2">
+        <form method="POST" action="/t/reply/{{.thread.ID}}">
+        {{.ginContext|csrf_field}}
+            <div class="form-group">
+        <textarea name="body" rows="5" id="body" CLASS="form-control" PLACEHOLDER="Have something to say?"></textarea>
+    </div>
 
-    {{/*@if(auth()->check())*/}}
-{{/*<div class="row">*/}}
-{{/*<div class="col-md-8 col-md-offset-2">*/}}
+    <button type="submit" class="btn btn-default">Post</button>
 
-        {{/*<form method="POST" action="{{ $thread->path().'/replies' }}">*/}}
+</form>
 
-    {{/*<div class="form-group">*/}}
-        {{/*<textarea name="body" rows="5" id="body" CLASS="form-control" PLACEHOLDER="Have something to say?"></textarea>*/}}
-    {{/*</div>*/}}
+</div>
+</div>
 
-    {{/*<button type="submit" class="btn btn-default">Post</button>*/}}
-
-{{/*</form>*/}}
-
-{{/*</div>*/}}
-{{/*</div>*/}}
-
-    {{/*@else*/}}
-{{/*<p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to participate in this discussion.</p>*/}}
-    {{/*@endif*/}}
+    {{else}}
+<p class="text-center">Please <a href="/login">sign in</a> to participate in this discussion.</p>
+    {{end}}
 
 </div>
 {{template "layouts/footer.html" .}}

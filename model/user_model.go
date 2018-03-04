@@ -8,3 +8,8 @@ type User struct {
 	Password      string `gorm:"not null" json:"-"`
 	RememberToken string `gorm:"size:100" json:"-"`
 }
+
+//Username user login name
+func (u *User) Username() string {
+	return "email"
+}

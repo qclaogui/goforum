@@ -21,14 +21,7 @@ func (a *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	user := &model.User{}
-	if err := forumC.DB.Where("email=?", c.PostForm("email")).Limit(1).Find(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error_code": 40002,
-			"message":    err.Error(),
-		})
-		return
-	}
+	user := us.FindByUsername(c.PostForm("email"))
 
 	if !model.VerifyingPassword(user.Password, c.PostForm("password")+user.RememberToken) {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -94,45 +87,29 @@ func (a *AuthController) Store(c *gin.Context) {
 		return
 	}
 
-	u := model.User{
-		Name:     c.PostForm("name"),
-		Email:    c.PostForm("email"),
-		Password: c.PostForm("password"),
-	}
-	if forumC.DB.Where("email=?", u.Email).Limit(1).Find(&u).RecordNotFound() {
-		u.RememberToken = model.RandomString(40)
-		u.Password = model.BCryptPassword(u.Password + u.RememberToken)
-		forumC.DB.Create(&u)
+	u := us.Store(c)
 
-		//jwtToken
-		token, _ := model.GenerateJwtAuthToken(&model.PayloadClaims{
-			Data: model.Payload{
-				UserID: u.ID,
-				Name:   u.Name,
-			},
-		})
+	//jwtToken
+	token, _ := model.GenerateJwtAuthToken(&model.PayloadClaims{
+		Data: model.Payload{
+			UserID: u.ID,
+			Name:   u.Name,
+		},
+	})
 
-		if "application/json" == c.ContentType() {
-			c.JSON(http.StatusOK, gin.H{
-				"error_code": 0,
-				"message":    "register success",
-				"token":      token,
-			})
-			return
-		}
-
-		session := sessions.Default(c)
-		session.Set("jwt-token", token)
-		session.Save()
-		c.Redirect(http.StatusFound, "/home")
-
-	} else {
+	if "application/json" == c.ContentType() {
 		c.JSON(http.StatusOK, gin.H{
-			"error_code": 10002,
-			"message":    "user exists",
+			"error_code": 0,
+			"message":    "register success",
+			"token":      token,
 		})
 		return
 	}
+
+	session := sessions.Default(c)
+	session.Set("jwt-token", token)
+	session.Save()
+	c.Redirect(http.StatusFound, "/home")
 }
 
 //ShowLoginPage return login page

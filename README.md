@@ -14,16 +14,17 @@
 
 goforum use Gin + Vue . [laravel](https://github.com/laravel/laravel) and [laravel-mix](https://github.com/JeffreyWay/laravel-mix) helped me a lot.
 
- ## Introduction
- Let's go a forum with TDD
+
+ [中文版.md](README_ZH.md)
+
 
  ## Getting started
-
-   pull down the code with `go get`:
 
    ```
    go get github.com/qclaogui/goforum
    ```
+
+   ***OR:***
 
    make sure you have `dep` installed
 
@@ -31,12 +32,12 @@ goforum use Gin + Vue . [laravel](https://github.com/laravel/laravel) and [larav
    go get -u github.com/golang/dep/cmd/dep
    ```
 
-   Go into the source directory and pull down the project dependencies.:
+   Then Go into the source directory and pull down the project dependencies.:
 
    ```
-   cd $GOPATH/src/github.com/qclaogui/goforum
+   git clone https://github.com/qclaogui/goforum.git $GOPATH/src/github.com/qclaogui/goforum
 
-   dep ensure
+   cd $GOPATH/src/github.com/qclaogui/goforum && dep ensure
    ```
 
  ## Edit configuration
@@ -52,17 +53,19 @@ goforum use Gin + Vue . [laravel](https://github.com/laravel/laravel) and [larav
    Now run
 
    ```
-   cd $GOPATH/src/github.com/qclaogui/goforum
+   cd $GOPATH/src/github.com/qclaogui/goforum/cmd/web
 
    go run main.go
    ```
+   Then go to: [localhost:8321](http://localhost:8321)
+
  ## Development
 
  To start developing, this project requires NodeJS to build the sources,  you have to execute only a few commands
 
    ```
    cd $GOPATH/src/github.com/qclaogui/goforum
-   
+
    npm install
 
    npm run watch

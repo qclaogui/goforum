@@ -1,4 +1,5 @@
 APP_NAME: goforum
+APP_SERVER_PORT: 8321
 APP_URL: http://localhost:8321
 
 DB_CONNECTION: mysql

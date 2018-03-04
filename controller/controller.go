@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/qclaogui/goforum/config"
 	"github.com/qclaogui/goforum/middleware"
 	"github.com/qclaogui/goforum/model"
@@ -21,9 +20,27 @@ func init() {
 	forumC = config.AppConfig
 }
 
-//forumDB return forum database
-func forumDB() *gorm.DB {
-	return forumC.DB
+// CurrentUser return a login user payload data
+func CurrentUser(c *gin.Context) *model.Payload {
+
+	p, exists := c.Get("payload")
+	if !exists {
+		return nil
+	}
+
+	data, _ := p.(*model.Payload)
+
+	return data
+}
+
+// CurrentUserID return a login user ID
+func CurrentUserID(c *gin.Context) uint {
+	return CurrentUser(c).UserID
+}
+
+// CurrentUserName return a login user name
+func CurrentUserName(c *gin.Context) string {
+	return CurrentUser(c).Name
 }
 
 // AuthUser return a login user payload data
@@ -76,14 +93,4 @@ func authCheck(c *gin.Context) bool {
 	}
 
 	return false
-}
-
-//AuthGuest return bool
-func AuthGuest(c *gin.Context) bool {
-
-	if _, ok := AuthUser(c); ok {
-		return false
-	}
-
-	return true
 }

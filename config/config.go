@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/jinzhu/gorm"
-	"github.com/qclaogui/goforum/model"
 	"github.com/spf13/viper"
 
 	//use mysql
@@ -57,13 +56,6 @@ func (a *APP) initDB() {
 	if err != nil {
 		panic(err)
 	}
-
-	db.AutoMigrate(
-		&model.User{},
-		&model.Thread{},
-		&model.Channel{},
-		&model.Reply{},
-	)
 
 	a.DB = db
 }

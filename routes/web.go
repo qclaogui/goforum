@@ -11,6 +11,7 @@ func WebGroup(r *gin.Engine) {
 	r.GET("", welcomeCtl.Index)
 
 	r.GET("/home", homeCtl.Index)
+	r.GET("/p", userCtl.Show)
 
 	thread := r.Group("/t", middleware.JwtAuthMiddleware(
 		threadCtl.Show,
@@ -20,6 +21,7 @@ func WebGroup(r *gin.Engine) {
 		thread.GET("", threadCtl.Index)
 		thread.GET("show/:tid", threadCtl.Show)
 
+		//replyCtl
 		//Add Thread
 		thread.GET("create", threadCtl.Create)
 		thread.POST("store", threadCtl.Store)
@@ -27,6 +29,9 @@ func WebGroup(r *gin.Engine) {
 		//Edit Thread
 		thread.GET("edit/:tid", threadCtl.Edit)
 		thread.POST("edit/:tid", threadCtl.Update)
+
+		//reply Thread
+		thread.POST("reply/:tid", replyCtl.Store)
 
 		//Delete Thread
 		thread.POST("delete/:tid", threadCtl.Destroy)

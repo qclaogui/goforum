@@ -5,7 +5,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/qclaogui/goforum/model"
+	"github.com/qclaogui/goforum/repository/mysql"
 )
+
+//数据源
+var ts *mysql.ThreadRepository
+
+func init() {
+	ts = &mysql.ThreadRepository{GormDB: forumC.DB}
+}
 
 //ThreadController deal with thread
 type ThreadController struct{}
@@ -13,13 +21,10 @@ type ThreadController struct{}
 //Index get All Threads
 func (t *ThreadController) Index(c *gin.Context) {
 
-	var threads []model.Thread
+	threads := ts.FindAll()
 
-	forumC.DB.Debug().Find(&threads)
-
-	for i, v := range threads {
-		v.WithUser(forumC.DB)
-		threads[i] = v
+	for _, v := range threads {
+		v.With(ts.GormDB, &model.User{})
 	}
 
 	if "application/json" == c.ContentType() {
@@ -44,14 +49,8 @@ func (t *ThreadController) Show(c *gin.Context) {
 		return
 	}
 
-	thread, err := (&model.Thread{}).FindByID(c, forumC.DB, "User", "Reply")
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": err.Error(),
-		})
-		return
-	}
+	//从数据源服务获取数据
+	thread := ts.FindByID(c.Param("tid")).With(ts.GormDB, &model.Reply{}, &model.User{})
 
 	if "application/json" == c.ContentType() {
 		c.JSON(http.StatusOK, gin.H{
@@ -85,7 +84,9 @@ func (t *ThreadController) Store(c *gin.Context) {
 		return
 	}
 
-	(&model.Thread{}).Create(c, forumC.DB)
+	c.Set("user_id", int(CurrentUserID(c)))
+
+	ts.Store(c)
 
 	c.Redirect(http.StatusFound, "/t")
 }
@@ -100,13 +101,7 @@ func (t *ThreadController) Edit(c *gin.Context) {
 		return
 	}
 
-	thread, err := (&model.Thread{}).FindByID(c, forumC.DB)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": err.Error(),
-		})
-		return
-	}
+	thread := ts.FindByID(c.Param("tid"))
 
 	c.HTML(http.StatusOK, "thread/edit.html", gin.H{
 		"thread":     thread,
@@ -131,12 +126,7 @@ func (t *ThreadController) Update(c *gin.Context) {
 		return
 	}
 
-	if err := (&model.Thread{}).Edit(c, forumC.DB); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": err.Error(),
-		})
-		return
-	}
+	ts.Update(c)
 
 	c.Redirect(http.StatusFound, "/t")
 }
@@ -151,12 +141,7 @@ func (t *ThreadController) Destroy(c *gin.Context) {
 		return
 	}
 
-	if err := (&model.Thread{}).DestroyByID(c, forumC.DB); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": err.Error(),
-		})
-		return
-	}
+	ts.Destroy(c)
 
 	c.Redirect(http.StatusFound, "/t")
 }
