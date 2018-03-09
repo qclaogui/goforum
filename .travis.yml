@@ -3,5 +3,12 @@ go:
   - "1.8.x"
   - "1.9.x"
   - "1.10"
+services:
+  - mysql
 
-script: go test ./...
+before_script:
+    - mysql -u root -e 'create database gogogo;'
+    - cp app.yml.example app.yml
+script:
+  - go get -u -t ./...
+#  - go test ./...
